@@ -1,2 +1,2 @@
 # ToxicCommentClassifier
-This is a repository for kaggle challenge, Toxic Comment Classifier
+This is a repository for building toxic comment classification.
