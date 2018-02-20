@@ -1,10 +1,14 @@
 import nltk
 import tqdm
+from toxic.spell_correct import correct_sentence
 
+from nltk.corpus import stopwords
 
 def tokenize_sentences(sentences, words_dict):
+    stopWords = set(stopwords.words('english'))
     tokenized_sentences = []
     for sentence in tqdm.tqdm(sentences):
+        sentence = correct_sentence(sentence)
         if hasattr(sentence, "decode"):
             sentence = sentence.decode("utf-8")
         tokens = nltk.tokenize.word_tokenize(sentence)
@@ -17,3 +21,7 @@ def tokenize_sentences(sentences, words_dict):
             result.append(word_index)
         tokenized_sentences.append(result)
     return tokenized_sentences, words_dict
+
+
+def correct_sentence(sentence):
+    return correct_sentence(sentence)
