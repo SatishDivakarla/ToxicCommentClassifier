@@ -4,7 +4,7 @@ from nltk.tokenize import word_tokenize
 import string
 def words(text): return re.findall(r'\w+', text.lower())
 
-WORDS = Counter(words(open('../../../../data/big.txt').read()))
+WORDS = Counter(words(open('big.txt').read()))
 
 def P(word, N=sum(WORDS.values())):
     "Probability of `word`."

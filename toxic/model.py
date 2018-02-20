@@ -26,9 +26,9 @@ def get_model(embedding_matrix, sequence_length, dropout_rate, recurrent_units, 
     input_layer = Input(shape=(sequence_length,))
     embedding_layer = Embedding(embedding_matrix.shape[0], embedding_matrix.shape[1],
                                 weights=[embedding_matrix], trainable=False)(input_layer)
-    x = Bidirectional(GRU(recurrent_units, return_sequences=True))(embedding_layer)
+    x = Bidirectional(CuDNNGRU(recurrent_units, return_sequences=True))(embedding_layer)
     x = Dropout(dropout_rate)(x)
-    x = Bidirectional(GRU(recurrent_units, return_sequences=True))(x)
+    x = Bidirectional(CuDNNGRU(recurrent_units, return_sequences=True))(x)
     x_max = GlobalMaxPool1D()(x)
     x_avg = GlobalAveragePooling1D()(x)
     x = concatenate([x_max, x_avg])
