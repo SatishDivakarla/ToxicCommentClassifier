@@ -41,7 +41,7 @@ def _train_model(model, batch_size, train_x, train_y, val_x, val_y):
     return model
 
 def _train_model_with_roc_auc(model, batch_size, train_x, train_y, val_x, val_y):
-    best_roc_acu = 1
+    best_roc_auc = 2
     best_weights = None
     best_epoch = 0
 
@@ -59,12 +59,12 @@ def _train_model_with_roc_auc(model, batch_size, train_x, train_y, val_x, val_y)
 
         total_roc_auc /= 6.
         print("Loss calculated")
-        print("Epoch {0} loss {1} best_loss {2}".format(current_epoch, total_roc_auc, best_roc_acu))
+        print("Epoch {0} loss {1} best_loss {2}".format(current_epoch, total_roc_auc, best_roc_auc))
 
         current_epoch += 1
-        if total_roc_auc < best_roc_acu or best_roc_acu == -1:
+        if total_roc_auc > best_roc_auc or best_roc_auc == 2:
             print("Updating the best model")
-            best_roc_acu = total_roc_auc
+            best_roc_auc = total_roc_auc
             best_weights = model.get_weights()
             best_epoch = current_epoch
         else:
