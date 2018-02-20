@@ -81,7 +81,9 @@ def main():
         args.sentences_length)
     X_train = np.array(train_list_of_token_ids)
     X_test = np.array(test_list_of_token_ids)
-
+    print(embedding_matrix.shape)
+    print(embedding_matrix.shape[0])
+    print(embedding_matrix.shape[1])
     get_model_func = lambda: get_model(
         embedding_matrix,
         args.sentences_length,
