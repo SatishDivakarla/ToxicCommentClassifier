@@ -25,7 +25,7 @@ def detect_language(row):
     try:
         return detect(row)
     except:
-        return "NA"
+        return "en"
 
 
 def main():
@@ -58,9 +58,8 @@ def main():
     test_data['language'] = test_data['comment_text'].apply(detect_language)
 
     # Translate the non-english to the english.
-    train_data['comment_text'] = train_data['comment_text'].apply(translate, args=(train_data['language'],))
-    test_data['comment_text'] = test_data['comment_text'].apply(translate, args=(test_data['language'],))
-
+    train_data['comment_text'] = train_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
+    test_data['comment_text'] = test_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
 
     list_sentences_train = train_data["comment_text"].fillna(NAN_WORD).values
     list_sentences_test = test_data["comment_text"].fillna(NAN_WORD).values

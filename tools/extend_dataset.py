@@ -4,7 +4,7 @@ from textblob.translate import NotTranslated
 
 import argparse
 import os
-import pandas as pd
+import numpy as np
 
 NAN_WORD = "_NAN_"
 
