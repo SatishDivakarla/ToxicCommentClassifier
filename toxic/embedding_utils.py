@@ -26,7 +26,6 @@ def read_embedding_list(file_path):
 def clear_embedding_list(embedding_list, embedding_word_dict, words_dict):
     cleared_embedding_list = []
     cleared_embedding_word_dict = {}
-
     for word in words_dict:
         if word not in embedding_word_dict:
             continue

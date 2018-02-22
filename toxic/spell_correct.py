@@ -44,9 +44,7 @@ def edits2(word):
     "All edits that are two edits away from `word`."
     return (e2 for e1 in edits1(word) for e2 in edits1(e1))
 
-s = "I don't know who the mothjer fuker is this"
-s = "\n \n I couldn't figure out the mothjer fuker is this. 'm lovin it!!"
 
-corrected_sentence = correct_sentence(s)
+# corrected_sentence = correct_sentence(s)
 #print(corrected_sentence)
 #print(corrected_sentence.translate(string.punctuation))

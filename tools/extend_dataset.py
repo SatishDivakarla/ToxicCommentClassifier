@@ -15,11 +15,9 @@ def translate(comment, language):
 
     text = TextBlob(comment)
     try:
-        text = text.translate(to=language)
-        text = text.translate(to="en")
+        text = text.translate(from_lang=language, to="en")
     except NotTranslated:
         pass
-
     return str(text)
 
 

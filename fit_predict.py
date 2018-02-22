@@ -3,6 +3,9 @@ from toxic.nltk_utils import tokenize_sentences
 from toxic.train_utils import train_folds
 from toxic.embedding_utils import read_embedding_list, clear_embedding_list, convert_tokens_to_ids
 
+from langdetect import detect
+from tools.extend_dataset import translate
+
 import argparse
 import numpy as np
 import os
@@ -16,6 +19,13 @@ NAN_WORD = "_NAN_"
 CLASSES = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
 
 PROBABILITIES_NORMALIZE_COEFFICIENT = 1.4
+
+
+def detect_language(row):
+    try:
+        return detect(row)
+    except:
+        return "NA"
 
 
 def main():
@@ -42,8 +52,20 @@ def main():
     train_data = pd.read_csv(args.train_file_path)
     test_data = pd.read_csv(args.test_file_path)
 
+
+    # Identify language
+    train_data['language'] = train_data['comment_text'].apply(detect_language)
+    test_data['language'] = test_data['comment_text'].apply(detect_language)
+
+    # Translate the non-english to the english.
+    train_data['comment_text'] = train_data['comment_text'].apply(translate, args=(train_data['language'],))
+    test_data['comment_text'] = test_data['comment_text'].apply(translate, args=(test_data['language'],))
+
+
     list_sentences_train = train_data["comment_text"].fillna(NAN_WORD).values
     list_sentences_test = test_data["comment_text"].fillna(NAN_WORD).values
+
+
     y_train = train_data[CLASSES].values
 
     print("Tokenizing sentences in train set...")
