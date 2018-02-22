@@ -12,13 +12,15 @@ NAN_WORD = "_NAN_"
 def translate(comment, language):
     if hasattr(comment, "decode"):
         comment = comment.decode("utf-8")
-
-    text = TextBlob(comment)
-    try:
-        text = text.translate(from_lang=language, to="en")
-    except NotTranslated:
-        pass
-    return str(text)
+    if language == "en":
+        return comment
+    else:
+        text = TextBlob(comment)
+        try:
+            text = text.translate(from_lang=language, to="en")
+        except NotTranslated:
+            pass
+        return str(text)
 
 
 def main():
