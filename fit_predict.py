@@ -60,6 +60,8 @@ def main():
     # Translate the non-english to the english.
     train_data['comment_text'] = train_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
     test_data['comment_text'] = test_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
+    train_data.to_csv("train_data_translated.csv")
+    test_data.to_csv("test_data_translated.csv")
 
     list_sentences_train = train_data["comment_text"].fillna(NAN_WORD).values
     list_sentences_test = test_data["comment_text"].fillna(NAN_WORD).values
