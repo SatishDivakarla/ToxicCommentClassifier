@@ -93,7 +93,6 @@ def train_folds(X, y, fold_count, batch_size, get_model_func):
         val_y = y[fold_start:fold_end]
 
         model = _train_model_with_roc_auc(get_model_func(), batch_size, train_x, train_y, val_x, val_y)
-        pickle.dump(model, "model_"+fold_id+"epoch.pkl")
         models.append(model)
 
     return models

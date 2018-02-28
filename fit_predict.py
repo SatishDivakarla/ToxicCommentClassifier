@@ -5,6 +5,7 @@ from toxic.embedding_utils import read_embedding_list, clear_embedding_list, con
 
 from langdetect import detect
 from tools.extend_dataset import translate
+from toxic.nltk_utils import clean
 
 import argparse
 import numpy as np
@@ -54,14 +55,19 @@ def main():
 
 
     # Identify language
-    train_data['language'] = train_data['comment_text'].apply(detect_language)
-    test_data['language'] = test_data['comment_text'].apply(detect_language)
+    #train_data['language'] = train_data['comment_text'].apply(detect_language)
+    #test_data['language'] = test_data['comment_text'].apply(detect_language)
 
     # Translate the non-english to the english.
-    train_data['comment_text'] = train_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
-    test_data['comment_text'] = test_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
-    train_data.to_csv("train_data_translated.csv")
-    test_data.to_csv("test_data_translated.csv")
+    #train_data['comment_text'] = train_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
+    #test_data['comment_text'] = test_data.apply(lambda x: translate(x.comment_text, x.language),axis=1)
+    #train_data.to_csv("train_data_translated.csv")
+    #test_data.to_csv("test_data_translated.csv")
+
+    train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
+    train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
+    train_data.to_csv("train_data_cleaned_after_translate.csv")
+    test_data.to_csv("test_data_cleaned_after_translate.csv")
 
     list_sentences_train = train_data["comment_text"].fillna(NAN_WORD).values
     list_sentences_test = test_data["comment_text"].fillna(NAN_WORD).values
@@ -125,6 +131,7 @@ def main():
     for fold_id, model in enumerate(models):
         model_path = os.path.join(args.result_path, "model{0}_weights.npy".format(fold_id))
         np.save(model_path, model.get_weights())
+        model.save_weights("model{0}_weights.h5".format(fold_id))
 
         test_predicts_path = os.path.join(args.result_path, "test_predicts{0}.npy".format(fold_id))
         test_predicts = model.predict(X_test, batch_size=args.batch_size)

@@ -12,7 +12,7 @@ def read_embedding_list(file_path):
     #         embedding = np.array([float(num) for num in data[1:-1]])
     #         embedding_list.append(embedding)
     #         embedding_word_dict[word] = len(embedding_word_dict)
-    with open(file_path) as f:
+    with open(file_path, encoding='utf-8', errors='ignore') as f:
         for line in tqdm(f.readlines()[1:-1]):
             data = line.split(" ")
             word = data[0]
