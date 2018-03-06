@@ -64,10 +64,10 @@ def main():
     #train_data.to_csv("train_data_translated.csv")
     #test_data.to_csv("test_data_translated.csv")
 
-    train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
-    train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
-    train_data.to_csv("train_data_cleaned_after_translate.csv")
-    test_data.to_csv("test_data_cleaned_after_translate.csv")
+    #train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
+    #train_data['comment_text'] = train_data.apply(lambda x: clean(x.comment_text), axis=1)
+    #train_data.to_csv("train_data_cleaned_after_translate.csv")
+    #test_data.to_csv("test_data_cleaned_after_translate.csv")
 
     list_sentences_train = train_data["comment_text"].fillna(NAN_WORD).values
     list_sentences_test = test_data["comment_text"].fillna(NAN_WORD).values
@@ -96,6 +96,9 @@ def main():
     embedding_list.append([-1.] * embedding_size)
 
     embedding_matrix = np.array(embedding_list)
+
+    embedding_matrix_path = os.path.join(args.result_path, "embedding_matrix.npy")
+    np.save(embedding_matrix_path, embedding_matrix)
 
     id_to_word = dict((id, word) for word, id in words_dict.items())
     train_list_of_token_ids = convert_tokens_to_ids(
