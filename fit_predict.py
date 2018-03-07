@@ -99,6 +99,8 @@ def main():
 
     embedding_matrix_path = os.path.join(args.result_path, "embedding_matrix.npy")
     np.save(embedding_matrix_path, embedding_matrix)
+    words_dict_path = os.path.join(args.result_path, "words_dict.npy")
+    np.save(words_dict_path, words_dict)
 
     id_to_word = dict((id, word) for word, id in words_dict.items())
     train_list_of_token_ids = convert_tokens_to_ids(
