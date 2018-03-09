@@ -161,6 +161,7 @@ def main():
 
     print("Predicting Discussion posts...")
     posts = pd.read_csv("posts_cleaned.csv")
+    posts = posts.dropna()
     discussion_posts = posts['MSG_TEXT'].tolist()
     tokenized_discussion_posts, words_dict = tokenize_sentences(discussion_posts, words_dict)
     #id_to_word = dict((id, word) for word, id in words_dict.items())
