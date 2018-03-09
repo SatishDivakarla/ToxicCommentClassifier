@@ -159,5 +159,33 @@ def main():
     submit_path = os.path.join(args.result_path, "submit")
     test_predicts.to_csv(submit_path, index=False)
 
+    print("Predicting Discussion posts...")
+    posts = pd.read_csv("posts_cleaned.csv")
+    discussion_posts = posts['MSG_TEXT'].tolist()
+    tokenized_discussion_posts, words_dict = tokenize_sentences(discussion_posts, words_dict)
+    #id_to_word = dict((id, word) for word, id in words_dict.items())
+    discussion_list_of_token_ids = convert_tokens_to_ids(
+        tokenized_discussion_posts,
+        id_to_word,
+        embedding_word_dict,
+        args.sentences_length)
+    X_test = np.array(discussion_list_of_token_ids)
+    discussion_predict_list = []
+    for fold_id, model in enumerate(models):
+        discussion_predicts = model.predict(X_test, batch_size=args.batch_size)
+        discussion_predict_list.append(discussion_predicts)
+
+    discussion_predicts = np.ones(discussion_predict_list[0].shape)
+    for fold_predict in discussion_predict_list:
+        discussion_predicts *= fold_predict
+
+    discussion_predicts **= (1. / len(discussion_predict_list))
+    discussion_predicts **= PROBABILITIES_NORMALIZE_COEFFICIENT
+
+    discussion_predicts = pd.DataFrame(data=discussion_predicts, columns=CLASSES)
+    discussion_predicts['MSG_TEXT']=discussion_posts
+    discussion_predicts = discussion_predicts[["MSG_TEXT"] + CLASSES]
+    discussion_predicts_path = os.path.join(args.result_path, "discussion_predicts.csv")
+    discussion_predicts.to_csv(discussion_predicts_path, index=False)
 if __name__ == "__main__":
     main()
