@@ -1,6 +1,7 @@
 from toxic.model import get_model
 from toxic.nltk_utils import tokenize_sentences
 from toxic.train_utils import train_folds
+from toxic.train_utils import train_folds_non_lambda
 from toxic.embedding_utils import read_embedding_list, clear_embedding_list, convert_tokens_to_ids
 
 from langdetect import detect
@@ -118,7 +119,8 @@ def main():
     print(embedding_matrix.shape)
     print(embedding_matrix.shape[0])
     print(embedding_matrix.shape[1])
-    get_model_func = lambda: get_model(
+
+    model = get_model(
         embedding_matrix,
         args.sentences_length,
         args.dropout_rate,
@@ -126,7 +128,7 @@ def main():
         args.dense_size)
 
     print("Starting to train models...")
-    models = train_folds(X_train, y_train, args.fold_count, args.batch_size, get_model_func)
+    models = train_folds_non_lambda(X_train, y_train, args.fold_count, args.batch_size, model)
 
     if not os.path.exists(args.result_path):
         os.mkdir(args.result_path)

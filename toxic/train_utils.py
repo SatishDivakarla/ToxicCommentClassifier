@@ -40,6 +40,7 @@ def _train_model(model, batch_size, train_x, train_y, val_x, val_y):
     model.set_weights(best_weights)
     return model
 
+
 def _train_model_with_roc_auc(model, batch_size, train_x, train_y, val_x, val_y):
     best_roc_auc = 2
     best_weights = None
@@ -76,6 +77,7 @@ def _train_model_with_roc_auc(model, batch_size, train_x, train_y, val_x, val_y)
     model.set_weights(best_weights)
     return model
 
+
 def train_folds(X, y, fold_count, batch_size, get_model_func):
     fold_size = len(X) // fold_count
     models = []
@@ -93,6 +95,28 @@ def train_folds(X, y, fold_count, batch_size, get_model_func):
         val_y = y[fold_start:fold_end]
 
         model = _train_model_with_roc_auc(get_model_func(), batch_size, train_x, train_y, val_x, val_y)
+        models.append(model)
+
+    return models
+
+
+def train_folds_non_lambda(X, y, fold_count, batch_size, model):
+    fold_size = len(X) // fold_count
+    models = []
+    for fold_id in range(0, fold_count):
+        fold_start = fold_size * fold_id
+        fold_end = fold_start + fold_size
+
+        if fold_id == fold_size - 1:
+            fold_end = len(X)
+
+        train_x = np.concatenate([X[:fold_start], X[fold_end:]])
+        train_y = np.concatenate([y[:fold_start], y[fold_end:]])
+
+        val_x = X[fold_start:fold_end]
+        val_y = y[fold_start:fold_end]
+
+        model = _train_model_with_roc_auc(model, batch_size, train_x, train_y, val_x, val_y)
         models.append(model)
 
     return models
